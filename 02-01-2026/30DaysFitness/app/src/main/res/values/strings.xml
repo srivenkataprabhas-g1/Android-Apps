@@ -1,0 +1,182 @@
+<resources>
+    <string name="app_name">30 Days Fitness</string>
+
+    <string name="day1_title">Stretch It Out</string>
+
+    <string name="day2_title">Take a Walk</string>
+
+    <string name="day3_title">Hydration Check</string>
+
+    <string name="day4_title">Core Activation</string>
+
+    <string name="day5_title">Leg Day Light</string>
+
+    <string name="day6_title">Posture Awareness</string>
+
+    <string name="day7_title">Rest and Recover</string>
+
+    <string name="day8_title">Jumping Jacks</string>
+
+    <string name="day9_title">Morning Stretch</string>
+
+    <string name="day10_title">Cardio Boost</string>
+
+    <string name="day11_title">Upper Body</string>
+
+    <string name="day12_title">Balance Practice</string>
+
+    <string name="day13_title">Healthy Eating</string>
+
+    <string name="day14_title">Active Rest</string>
+
+    <string name="day15_title">Halfway Challenge</string>
+
+    <string name="day16_title">Arm Strength</string>
+
+    <string name="day17_title">Step Count</string>
+
+    <string name="day18_title">Breathing Exercise</string>
+
+    <string name="day19_title">Core Strength</string>
+
+    <string name="day20_title">Flexibility Focus</string>
+
+    <string name="day21_title">Full Body Light</string>
+
+    <string name="day22_title">Mindful Movement</string>
+
+    <string name="day23_title">Cardio Fun</string>
+
+    <string name="day24_title">Lower Body</string>
+
+    <string name="day25_title">Upper Body Stretch</string>
+
+    <string name="day26_title">Endurance</string>
+
+    <string name="day27_title">Core Hold</string>
+
+    <string name="day28_title">Mobility Day</string>
+
+    <string name="day29_title">Light Cardio</string>
+
+    <string name="day30_title">Finish Strong</string>
+    <string name="day1_desc">
+        Start your day with gentle full-body stretches. Focus on your neck, shoulders, back, arms, and legs to loosen tight muscles and improve flexibility.
+    </string>
+
+    <string name="day2_desc">
+        Take a relaxed walk outdoors or indoors for at least 15 minutes. Keep a steady pace and focus on breathing evenly.
+    </string>
+
+    <string name="day3_desc">
+        Staying hydrated helps your body function better. Drink water consistently throughout the day, especially after physical activity.
+    </string>
+
+    <string name="day4_desc">
+        Strengthen your core by holding a plank position. Keep your back straight and engage your abdominal muscles for best results.
+    </string>
+
+    <string name="day5_desc">
+        Squats help build leg strength. Keep your feet shoulder-width apart and lower yourself slowly while maintaining good posture.
+    </string>
+
+    <string name="day6_desc">
+        Be mindful of your posture when sitting, standing, or walking. Keeping your spine aligned helps prevent back and neck discomfort.
+    </string>
+
+    <string name="day7_desc">
+        Recovery is important. Take a full rest day or do light stretching to help your muscles relax and rebuild.
+    </string>
+
+    <string name="day8_desc">
+        Jumping jacks are a great full-body exercise. Move at a comfortable speed and rest between sets if needed.
+    </string>
+
+    <string name="day9_desc">
+        A morning stretch improves blood flow and flexibility. Stretch slowly and avoid sudden movements.
+    </string>
+
+    <string name="day10_desc">
+        Increase your heart rate with a short cardio session. Jog or walk briskly while maintaining steady breathing.
+    </string>
+
+    <string name="day11_desc">
+        Push-ups strengthen your arms, shoulders, and chest. Modify by using your knees if needed.
+    </string>
+
+    <string name="day12_desc">
+        Improve balance and stability by standing on one leg. Focus on a fixed point to help maintain balance.
+    </string>
+
+    <string name="day13_desc">
+        Fuel your body with healthy foods. Fruits and vegetables provide important vitamins and energy.
+    </string>
+
+    <string name="day14_desc">
+        Stay lightly active today. Gentle movement helps with recovery while keeping your body energized.
+    </string>
+
+    <string name="day15_desc">
+        Challenge yourself with a short full-body workout. Take breaks as needed and focus on proper form.
+    </string>
+
+    <string name="day16_desc">
+        Arm circles help improve shoulder mobility. Move slowly and increase the circle size gradually.
+    </string>
+
+    <string name="day17_desc">
+        Staying active throughout the day adds up. Walking more helps improve endurance and overall health.
+    </string>
+
+    <string name="day18_desc">
+        Deep breathing helps reduce stress and improves focus. Breathe in through your nose and out through your mouth.
+    </string>
+
+    <string name="day19_desc">
+        Strengthen your core muscles with controlled crunches. Avoid pulling your neck and move with control.
+    </string>
+
+    <string name="day20_desc">
+        Focus on flexibility by stretching tight areas like hips and shoulders. Hold stretches comfortably without bouncing.
+    </string>
+
+    <string name="day21_desc">
+        Combine multiple exercises for a light full-body workout. Move at your own pace and stay consistent.
+    </string>
+
+    <string name="day22_desc">
+        Perform movements slowly and carefully today. Focusing on form helps prevent injury and improves strength.
+    </string>
+
+    <string name="day23_desc">
+        Make cardio fun by dancing or playing a sport. Choose an activity you enjoy to stay motivated.
+    </string>
+
+    <string name="day24_desc">
+        Lunges strengthen your legs and improve balance. Step forward carefully and keep your upper body upright.
+    </string>
+
+    <string name="day25_desc">
+        Stretch your upper body to relieve tension in your shoulders and arms, especially after long periods of sitting.
+    </string>
+
+    <string name="day26_desc">
+        Build endurance by walking continuously. Maintain a steady pace and focus on posture and breathing.
+    </string>
+
+    <string name="day27_desc">
+        Hold a plank for as long as you comfortably can. Stop if your form breaks and rest when needed.
+    </string>
+
+    <string name="day28_desc">
+        Improve joint mobility by gently rotating your wrists, shoulders, hips, and ankles.
+    </string>
+
+    <string name="day29_desc">
+        Perform light cardio to stay active without overexerting yourself. Keep movements smooth and relaxed.
+    </string>
+
+    <string name="day30_desc">
+        Celebrate your progress by repeating exercises you enjoyed the most. Stay proud of your consistency and effort.
+    </string>
+</resources>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyderabad Recommendations</string>
+    <string name="categories">Categories</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="details">Details</string>
+
+    <!-- Categories -->
+    <string name="category_coffee_shops">Coffee Shops</string>
+    <string name="category_restaurants">Restaurants</string>
+    <string name="category_parks">Parks</string>
+    <string name="category_museums">Museums</string>
+    <string name="category_temples">Temples</string>
+    <string name="category_zoos">Zoos</string>
+
+    <!-- Coffee Shops -->
+    <string name="coffee_1_name">Roastery Coffee House</string>
+    <string name="coffee_1_desc">Specializes in single-origin beans roasted in-house, with pour-over options and a minimalist interior ideal for work sessions; expect barista-led tastings and pastries baked daily.</string>
+    <string name="coffee_1_address">Road No. 45, Jubilee Hills, Hyderabad</string>
+
+    <string name="coffee_2_name">Autumn Leaf Café</string>
+    <string name="coffee_2_desc">Nestled in a heritage mansion with lush garden seating, this pet-friendly spot serves American-style brews alongside Chinese, Indian, and continental dishes; open 8 AM-10 PM daily, perfect for brunch or relaxed evenings.</string>
+    <string name="coffee_2_address">Road No. 12, Jubilee Hills, Hyderabad</string>
+
+    <string name="coffee_3_name">Theory Café</string>
+    <string name="coffee_3_desc">Features industrial-chic decor, extensive espresso drinks, house-made desserts like tiramisu, and light meals; popular for its vibrant vibe and weekend crowds.</string>
+    <string name="coffee_3_address">Film Nagar, Banjara Hills, Hyderabad</string>
+
+    <string name="coffee_4_name">Conçu</string>
+    <string name="coffee_4_desc">Focuses on gourmet pairings of artisanal coffee with French-inspired pastries; intimate setting with high-end beans from global roasters.</string>
+    <string name="coffee_4_address">Jubilee Hills, Hyderabad</string>
+
+    <string name="coffee_5_name">True Black Coffee</string>
+    <string name="coffee_5_desc">Emphasizes traditional South Indian filter coffee in a no-frills space, alongside modern brews; great for authentic, strong flavors without distractions.</string>
+    <string name="coffee_5_address">Road No. 36, Jubilee Hills, Hyderabad</string>
+
+    <!-- Restaurants -->
+    <string name="rest_1_name">Paradise Biryani</string>
+    <string name="rest_1_desc">Legendary for steaming, aromatic Hyderabadi dum biryani layered with spiced mutton or veg; family-style service in a bustling hall, best visited early to avoid lines.</string>
+    <string name="rest_1_address">Secunderabad, Hyderabad</string>
+
+    <string name="rest_2_name">Bawarchi</string>
+    <string name="rest_2_desc">Delivers robust biryanis, kebabs, and curries with secret spice blends; casual eatery thriving since decades, ideal for groups.</string>
+    <string name="rest_2_address">RTC X Roads, Hyderabad</string>
+
+    <string name="rest_3_name">Chutneys</string>
+    <string name="rest_3_desc">Pure-veg haven with unlimited thalis of dosas, vadas, and 50+ chutneys; clean, efficient service suits quick meals.</string>
+    <string name="rest_3_address">Banjara Hills, Hyderabad</string>
+
+    <string name="rest_4_name">Shah Ghouse</string>
+    <string name="rest_4_desc">24/7 outlet famed for haleem during Ramadan, sheer khurma, and melt-in-mouth kebabs; roadside vibe with non-stop crowds.</string>
+    <string name="rest_4_address">Tolichowki, Hyderabad</string>
+
+    <string name="rest_5_name">Olive Bistro and Bar</string>
+    <string name="rest_5_desc">Upscale Mediterranean fare like wood-fired pizzas and seafood by the lake; romantic al fresco dining with cocktails.</string>
+    <string name="rest_5_address">Durgam Cheruvu, Hyderabad</string>
+
+    <!-- Parks -->
+    <string name="park_1_name">Lumbini Park</string>
+    <string name="park_1_desc">Lakeside oasis with musical fountains, laser shows evenings, and boating; family-friendly with Buddha statue views.</string>
+    <string name="park_1_address">Hussain Sagar, Hyderabad</string>
+
+    <string name="park_2_name">KBR National Park</string>
+    <string name="park_2_desc">400-acre urban forest with trekking trails, deer park, and jogging paths; spot peacocks and butterflies at dawn.</string>
+    <string name="park_2_address">Jubilee Hills, Hyderabad</string>
+
+    <string name="park_3_name">Necklace Road</string>
+    <string name="park_3_desc">3.5 km promenade for cycling, food stalls, and sunset views over the lake; vibrant night market.</string>
+    <string name="park_3_address">Tank Bund, Hyderabad</string>
+
+    <string name="park_4_name">Sanjeevaiah Park</string>
+    <string name="park_4_desc">Riverside expanse with musical fountain, toy train, and amphitheater; picnic haven post-rainy season.</string>
+    <string name="park_4_address">Khairatabad, Hyderabad</string>
+
+    <string name="park_5_name">Botanical Garden</string>
+    <string name="park_5_desc">270-acre expanse showcasing 50,000+ plants, bonsai house, and orchidarium; educational trails for nature lovers.</string>
+    <string name="park_5_address">Kondapur, Hyderabad</string>
+
+    <string name="park_6_name">Nehru Zoological Park</string>
+    <string name="park_6_desc">Expansive 300-acre zoo featuring over 2000 animals including tigers, lions, elephants, and a nocturnal house; includes safari rides, children\'s park, and educational exhibits on conservation; open 8 AM-5:30 PM, closed Fridays.</string>
+    <string name="park_6_address">Bahadurpura, Hyderabad</string>
+
+    <!-- Museums -->
+    <string name="museum_1_name">Salar Jung Museum</string>
+    <string name="museum_1_desc">Vast trove of 40,000+ artifacts including Mughal paintings, clocks, and Veiled Rebecca statue; air-conditioned galleries suit full-day visits.</string>
+    <string name="museum_1_address">Darulshifa, Hyderabad</string>
+
+    <string name="museum_2_name">Chowmahalla Palace</string>
+    <string name="museum_2_desc">Restored Nizam residence with grand durbar hall, vintage cars, and crystal chandeliers; audio guides enhance history.</string>
+    <string name="museum_2_address">Motigalli, Hyderabad</string>
+
+    <string name="museum_3_name">Birla Science Centre</string>
+    <string name="museum_3_desc">Interactive exhibits, planetarium shows, and dinosaur skeletons; engaging for kids and science buffs.</string>
+    <string name="museum_3_address">Adarsh Nagar, Hyderabad</string>
+
+    <string name="museum_4_name">Telangana State Archaeology Museum</string>
+    <string name="museum_4_desc">Prehistoric tools, Kakatiya sculptures, and coins; compact yet rich in regional heritage.</string>
+    <string name="museum_4_address">Gunfoundry, Hyderabad</string>
+
+    <string name="museum_5_name">Nizam Museum</string>
+    <string name="museum_5_desc">Royal memorabilia like silver throne and wardrobe of the last Nizam; glimpse into opulent lifestyle.</string>
+    <string name="museum_5_address">Purani Haveli, Hyderabad</string>
+
+    <!-- Temples -->
+    <string name="temple_1_name">Peddamma Temple</string>
+    <string name="temple_1_desc">Vibrant Sri Peddamma Thalli shrine famous for Bonalu festival in July-August; grand processions, vermilion rituals, and community feasts draw thousands.</string>
+    <string name="temple_1_address">Jubilee Hills, Hyderabad</string>
+
+    <string name="temple_2_name">Chilkur Balaji Temple</string>
+    <string name="temple_2_desc">Known as "Visa Temple" for granting travel visas; circumambulate the sanctum 11 times for wishes, no cash or cameras allowed inside.</string>
+    <string name="temple_2_address">Chilkur, Hyderabad</string>
+
+    <string name="temple_4_name">ISKCON Temple</string>
+    <string name="temple_4_desc">Modern Krishna shrine with Vedic chants, Govinda aartis, and prasadam; serene hilltop with cultural programs.</string>
+    <string name="temple_4_address">Abdullahpurmet, Hyderabad</string>
+
+    <string name="temple_5_name">Ujjaini Mahakali Temple</string>
+    <string name="temple_5_desc">Ancient cave-like temple with powerful Devi idol; peak crowds during Dasara for special pujas and sindoor blessings.</string>
+    <string name="temple_5_address">Secunderabad, Hyderabad</string>
+
+</resources>

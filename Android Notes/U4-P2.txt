@@ -1,0 +1,613 @@
+Jetpack Compose Navigation – Detailed Study Guide
+
+(NavController, NavGraph, NavHost, Navigating Between Screens)
+
+. What is Navigation in Jetpack Compose?
+
+Navigation in Jetpack Compose allows you to move between different screens (composables) in your app while managing:
+
+Back stack
+
+Screen state
+
+Arguments passed between screens
+
+Instead of manually swapping composables, you use the Navigation component, which is structured and lifecycle-aware.
+
+. The Three Main Parts of the Navigation Component
+️⃣ NavController
+
+Role:
+Controls where you navigate in the app.
+
+Think of it as:
+
+“The remote control for screen navigation.”
+
+Responsibilities
+
+Navigate to a destination
+
+Handle back navigation
+
+Maintain the back stack
+
+Example
+val navController = rememberNavController()
+
+
+Navigating to another screen:
+
+navController.navigate("details")
+
+
+Going back:
+
+navController.popBackStack()
+
+️⃣ NavGraph
+
+Role:
+Defines all possible destinations (screens) and how they are connected.
+
+Think of it as:
+
+“A map of your app’s screens.”
+
+Characteristics
+
+Contains routes (strings)
+
+Each route points to a composable
+
+Can include arguments
+
+Example Routes
+object Routes {
+    const val Home = "home"
+    const val Details = "details"
+}
+
+️⃣ NavHost
+
+Role:
+Displays the current screen based on the navigation state.
+
+Think of it as:
+
+“The screen container that swaps composables.”
+
+Key Points
+
+Requires a NavController
+
+Requires a startDestination
+
+Hosts the NavGraph
+
+Example
+NavHost(
+    navController = navController,
+    startDestination = Routes.Home
+) {
+    composable(Routes.Home) {
+        HomeScreen(navController)
+    }
+    composable(Routes.Details) {
+        DetailsScreen()
+    }
+}
+
+. How Navigation Works (Step-by-Step Flow)
+
+App launches → NavHost loads
+
+startDestination composable is shown
+
+User performs an action (button click)
+
+NavController.navigate("route") is called
+
+NavHost switches to the new composable
+
+Back stack is updated automatically
+
+. Navigating Between Screens (With Example)
+Home Screen
+@Composable
+fun HomeScreen(navController: NavController) {
+    Button(onClick = {
+        navController.navigate("details")
+    }) {
+        Text("Go to Details")
+    }
+}
+
+Details Screen
+@Composable
+fun DetailsScreen() {
+    Text("Details Screen")
+}
+
+. Passing Data Between Screens
+Define route with argument
+composable(
+    route = "details/{userId}",
+    arguments = listOf(navArgument("userId") {
+        type = NavType.IntType
+    })
+) { backStackEntry ->
+    val userId = backStackEntry.arguments?.getInt("userId")
+    DetailsScreen(userId)
+}
+
+Navigate with argument
+navController.navigate("details/")
+
+. Cupcake App Navigation (Conceptual)
+
+In the Cupcake App, navigation is used to move through:
+
+Start Order Screen
+
+Flavor Selection Screen
+
+Pickup Date Screen
+
+Order Summary Screen
+
+Each screen:
+
+Is a composable
+
+Is a destination in the NavGraph
+
+Uses a shared ViewModel to keep state
+
+. Testing Navigation in Compose
+What to Test
+
+Correct screen is shown
+
+Buttons navigate to the correct destination
+
+Back navigation works
+
+UI state is preserved
+
+Example Concept
+composeTestRule
+    .onNodeWithText("Next")
+    .performClick()
+
+. Common FAQs (Very Important for Exams & Interviews)
+ Why do we use rememberNavController()?
+
+Because it:
+
+Keeps navigation state across recompositions
+
+Prevents recreation of the NavController
+
+ Difference between NavHost and NavGraph?
+NavHost	NavGraph
+Displays screens	Defines screens
+UI container	Logical structure
+Composable	Configuration
+ What is a route?
+
+A string identifier for a screen:
+
+"home"
+"details/{id}"
+
+ How is back navigation handled?
+
+Automatically by NavController, or manually using:
+
+navController.popBackStack()
+
+ Why is Navigation better than manually switching composables?
+
+Manages back stack
+
+Handles configuration changes
+
+Cleaner, scalable architecture
+
+Recommended by Android
+
+. Key Revision Points (Quick Notes)
+
+NavController → controls navigation
+
+NavGraph → defines destinations
+
+NavHost → displays destinations
+
+Routes are strings
+
+Navigation is state-driven
+
+Back stack is handled automatically
+
+Used heavily in multi-screen apps
+
+. One-Line Summary (Memory Trick)
+
+NavController navigates, NavGraph maps, NavHost displays.
+
+
+Cupcake App – Navigation with Jetpack Compose
+Full Steps + Detailed Explanation (Revision Guide)
+ Big Picture (Start Here)
+
+The Cupcake app teaches three core Compose concepts:
+
+State hoisting (ViewModel controls state)
+
+Navigation (moving between screens)
+
+System interaction (sharing data using Intents)
+
+Navigation is handled by:
+
+NavController
+
+NavHost
+
+composable destinations
+
+The AppBar reacts to navigation using the back stack.
+
+ App Architecture Overview
+CupcakeApp (root composable)
+│
+├── Scaffold
+│   ├── CupcakeAppBar   ← reacts to navigation
+│   └── NavHost         ← manages screens
+│
+├── StartOrderScreen
+├── SelectOptionScreen (Flavor)
+├── SelectOptionScreen (Pickup)
+└── OrderSummaryScreen
+
+
+State is stored in:
+
+OrderViewModel → OrderUiState
+
+ STEP : Define Screens with an Enum
+Why?
+
+Prevents string errors
+
+Gives one source of truth
+
+Makes navigation readable
+
+Code
+enum class CupcakeScreen(@StringRes val title: Int) {
+    Start(title = R.string.app_name),
+    Flavor(title = R.string.choose_flavor),
+    Pickup(title = R.string.choose_pickup_date),
+    Summary(title = R.string.order_summary)
+}
+
+What this gives you
+
+CupcakeScreen.Start.name → route
+
+CupcakeScreen.Start.title → AppBar title
+
+ STEP : Create NavController
+Why?
+
+NavController manages:
+
+Navigation actions
+
+Back stack
+
+Current destination
+
+Code
+val navController = rememberNavController()
+
+
+remember ensures:
+
+Same controller survives recomposition
+
+ STEP : Create NavHost
+Why?
+
+NavHost maps routes → composables
+
+Code
+NavHost(
+    navController = navController,
+    startDestination = CupcakeScreen.Start.name
+) {
+    composable(CupcakeScreen.Start.name) { ... }
+    composable(CupcakeScreen.Flavor.name) { ... }
+    composable(CupcakeScreen.Pickup.name) { ... }
+    composable(CupcakeScreen.Summary.name) { ... }
+}
+
+ STEP : Navigate Between Screens
+Example: Start → Flavor
+navController.navigate(CupcakeScreen.Flavor.name)
+
+Important Rule
+
+Only navigate using the NavController
+Never manually manage screens.
+
+ STEP : Cancel Order and Reset State
+Why?
+
+User may cancel at any step.
+
+Code
+private fun cancelOrderAndNavigateToStart(
+    viewModel: OrderViewModel,
+    navController: NavHostController
+) {
+    viewModel.resetOrder()
+    navController.popBackStack(
+        CupcakeScreen.Start.name,
+        inclusive = false
+    )
+}
+
+Explanation
+
+Clears ViewModel state
+
+Pops back stack to Start screen
+
+Keeps Start screen alive
+
+ STEP : Share Order Using Intent
+Why?
+
+Sharing UI is system-provided, not part of navigation.
+
+Key Concept: Implicit Intent
+Code
+private fun shareOrder(
+    context: Context,
+    subject: String,
+    summary: String
+) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, summary)
+    }
+
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            context.getString(R.string.new_cupcake_order)
+        )
+    )
+}
+
+What Happens
+
+Android shows Share Sheet
+
+User chooses app (Messages, Email, etc.)
+
+ STEP : Make AppBar Respond to Navigation (MOST IMPORTANT)
+Problem Before
+
+Title always static
+
+No Up button
+
+AppBar unaware of navigation
+
+ . Observe Back Stack
+val backStackEntry by navController.currentBackStackEntryAsState()
+
+Why?
+
+Converts navigation changes into Compose state
+
+ . Determine Current Screen
+val currentScreen = CupcakeScreen.valueOf(
+    backStackEntry?.destination?.route ?: CupcakeScreen.Start.name
+)
+
+Why?
+
+Converts route String → enum
+
+Needed for title + logic
+
+ . Dynamic AppBar
+CupcakeAppBar
+@Composable
+fun CupcakeAppBar(
+    currentScreen: CupcakeScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit
+)
+
+Dynamic Title
+title = { Text(stringResource(currentScreen.title)) }
+
+ . Show Up Button Conditionally
+canNavigateBack = navController.previousBackStackEntry != null
+
+Why?
+
+Start screen has no back stack
+
+Other screens do
+
+ . Navigate Up
+navigateUp = { navController.navigateUp() }
+
+System Back vs Up Button
+Button	Provided by
+System Back	Android OS
+Up Button	Your App
+
+Same behavior here.
+
+ Final Behavior Summary
+Feature	Result
+Dynamic AppBar title	
+Up button logic	
+Back stack handling	
+Implicit intent sharing	
+Single source of truth	
+ Common Mistakes (Revision Gold)
+
+ Hardcoding routes
+ AppBar outside Scaffold
+ Not observing back stack
+ Using popBackStack incorrectly
+ Navigating inside composables directly
+
+ Interview-Ready Concepts
+
+If asked:
+
+“How do you handle navigation in Compose?”
+
+Answer:
+
+“Using NavController, NavHost, and observing the back stack with currentBackStackEntryAsState() so UI like the AppBar reacts automatically.”
+
+Nice work — you’re very close, and most of your navigation logic is correct 👍
+There are just a few important issues + cleanups I’d recommend. I’ll go from critical → minor.
+
+✅ What you did correctly
+
+✅ Screen enum with titles
+
+✅ NavController + currentBackStackEntryAsState
+
+✅ Scaffold with TopAppBar
+
+✅ Navigation flow matches the codelab diagram
+
+✅ Correct use of popBackStack() for Cancel/Submit
+
+✅ ViewModel shared across destinations
+
+So conceptually, you nailed the exercise 👏
+
+❌ Issue 1: @param:StringRes is incorrect (this will break compilation)
+❌ Your code
+enum class LunchTrayScreen(@param:StringRes val title: Int)
+
+✅ Correct version
+enum class LunchTrayScreen(@StringRes val title: Int) {
+    Start(R.string.app_name),
+    EntreeMenu(R.string.choose_entree),
+    SideDishMenu(R.string.choose_side_dish),
+    AccompanimentMenu(R.string.choose_accompaniment),
+    Checkout(R.string.order_checkout)
+}
+
+
+👉 @param:StringRes is not valid Kotlin syntax here.
+You must annotate the property itself.
+
+❌ Issue 2: AppBar navigationIcon implementation
+
+You should not use Spacer inside navigationIcon.
+Also, the back button should appear only when navigation is possible.
+
+❌ Your code (problematic)
+navigationIcon = {
+    Spacer(modifier)
+    if (canNavigateBack) {
+        IconButton(
+            onClick = navigateUp,
+            modifier = modifier
+        ) { ... }
+    }
+    Spacer(modifier)
+}
+
+✅ Correct & clean version
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LunchTrayAppBar(
+    @StringRes currentScreenTitle: Int,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    CenterAlignedTopAppBar(
+        title = { Text(stringResource(currentScreenTitle)) },
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
+        },
+        modifier = modifier
+    )
+}
+
+⚠️ Issue 3: Double padding on Start screen
+
+You already apply innerPadding to the NavHost:
+
+NavHost(
+    modifier = Modifier.padding(innerPadding)
+)
+
+
+So don’t apply it again inside StartOrderScreen.
+
+❌ Your code
+modifier = Modifier
+    .fillMaxSize()
+    .padding(innerPadding)
+
+✅ Fix
+modifier = Modifier.fillMaxSize()
+
+⚠️ Issue 4: Back button visibility logic (best practice)
+
+Currently:
+
+canNavigateBack = navController.previousBackStackEntry != null
+
+
+This works, but the codelab expects no back button on the Start screen.
+
+✅ Recommended
+canNavigateBack = currentScreen != LunchTrayScreen.Start
+
+✅ Navigation logic: All good ✔
+
+Your navigation host is correct and matches the spec:
+
+Start → Entree → Side → Accompaniment → Checkout
+
+Cancel always resets + returns to Start
+
+Submit resets + returns to Start
+
+Uses shared OrderViewModel
+
+Well done here 👌
+
+✅ Final verdict
+
+Score: 9/10 ⭐
+Only small syntax + UI polish issues.

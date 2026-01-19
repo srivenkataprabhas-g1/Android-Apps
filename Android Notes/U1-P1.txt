@@ -1,0 +1,222 @@
+Unit  P — Introduction to Kotlin Basics
+
+(as per the official Android course on developer.android.com) 
+Android Developers
+
+ What This Pathway Covers
+
+This pathway teaches Kotlin fundamentals, including:
+
+ How to write and run your first Kotlin program
+ Using variables to store data
+ Defining and calling functions
+ Practicing these concepts with basic problems
+ A quiz to test understanding
+(This is the first step before you build Android apps with Compose.) 
+Android Developers
+
+The key modules are:
+
+Before you begin
+
+Your first program in Kotlin
+
+Create and use variables
+
+Create and use functions
+
+Practice problems
+
+What’s next (video)
+
+Quiz to earn your badge 
+Android Developers
+
+ ) Your First Program in Kotlin
+ Purpose
+
+Learn how to write, compile, and run a Kotlin program.
+
+ Core Concept
+
+Every Kotlin application starts from a main() function — this is where execution begins. 
+Android Developers
+
+ Example
+fun main() {
+    println("Hello Kotlin!")
+}
+
+
+Explanation:
+
+fun declares a function
+
+main is the starting function
+
+println() prints text to the output
+(Useful for console programs and learning basics.) 
+Kotlin
+
+What you’ll see:
+ The text "Hello Kotlin!" appears when you run the program.
+
+ ) Create and Use Variables
+ What Are Variables?
+
+Variables store data (like numbers or text) that your program can use and modify. Kotlin is statically typed — the type of each variable is known at compile time. 
+Kotlin
+
+ Two Kinds of Variables
+Keyword	Meaning	Can Change?
+val	Immutable (read-only)	
+var	Mutable (modifiable)	
+
+Examples:
+
+val greeting: String = "Hi Kotlin!"  // can't reassign
+var count: Int =                   // can change
+
+
+ When Kotlin can figure out the type automatically, you can omit it:
+
+val name = "Android"   // String inferred
+var points =        // Int inferred
+
+
+Why val and var?
+
+val protects data you don’t want to change
+
+var lets you update it later 
+Kotlin
+
+ ) Create and Use Functions
+ What Are Functions?
+
+Functions are reusable blocks of code that perform a specific task. You define them once and call them whenever needed. 
+TutorialsPoint
+
+ Basic Function
+fun sayHello() {
+    println("Hello World")
+}
+
+
+Call it:
+
+fun main() {
+    sayHello()
+}
+
+ Function With Parameters
+fun add(a: Int, b: Int): Int {
+    return a + b
+}
+
+
+Explanation:
+
+a: Int, b: Int are parameters
+
+: Int after parentheses is the return type
+
+return gives back a value 
+TutorialsPoint
+
+ Single-Expression Function
+
+Kotlin lets you write short functions more concisely:
+
+fun multiply(a: Int, b: Int) = a  b
+
+
+(Here Kotlin infers the return type automatically.) 
+Kotlin
+
+ ) Practice Problems (Concept Reinforcement)
+
+In this section of the official course, you usually get hands-on exercises such as:
+
+ Write a function that adds two numbers and prints a formatted result
+ Create variables, modify them, and print outcomes
+ Use functions to improve your code organization 
+Android Developers
+
+Why practice matters:
+Doing small coding exercises makes the concepts stick and prepares you for real app development.
+
+ ) Quiz + Badge
+
+After finishing the lessons and practice, you take a quiz to:
+
+ Test your understanding
+ Earn a badge for completing the module 
+Android Developers
+
+ Helpful Examples
+
+Here are common illustrative examples you might type in Kotlin:
+
+ Example – Mutable vs Immutable
+fun main() {
+    val name = "Kotlin"
+//  name = "Compose" //  Error: val cannot be reassigned
+
+    var score = 
+    score =          //  Works
+    println(score)
+}
+
+ Function That Prints a Message
+fun greetUser(user: String) {
+    println("Welcome, $user!")
+}
+
+fun main() {
+    greetUser("Alice")
+}
+
+
+Output:
+Welcome, Alice!
+
+ Function With Return Value
+fun square(x: Int): Int {
+    return x  x
+}
+
+fun main() {
+    val result = square()
+    println("Square is $result")
+}
+
+ Frequently Asked Questions (FAQs)
+ Q: Why do we use fun in Kotlin?
+
+A: fun is the keyword that tells Kotlin you’re defining a function. Without it, the compiler won’t interpret your code as a function. 
+TutorialsPoint
+
+ Q: What’s the difference between val and var?
+
+A:
+
+val means the value cannot be changed after assignment
+
+var allows reassignments
+It’s a best practice to use val whenever possible to prevent accidental modifications. 
+Kotlin
+
+ Q: Do I have to declare types every time?
+
+A: No — when you initialize a variable at declaration, Kotlin automatically infers the type for you. But if you declare without initializing right away, you must specify the type explicitly. 
+Kotlin
+
+ Q: What type of programs can I write with just these basics?
+
+A: At this stage, you can write simple console programs (like calculators) or functions that do computations. Later you’ll use these skills to build real Android UIs with Jetpack Compose. 
+Android Developers
+
+ Q: Why is Kotlin popular for Android development?
+
+A: Kotlin is concise, expressive, safe (null safety), interoperable with Java, and is Google’s recommended language for Android apps.

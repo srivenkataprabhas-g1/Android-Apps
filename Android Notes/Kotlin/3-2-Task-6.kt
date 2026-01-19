@@ -1,0 +1,19 @@
+enum class Daypart4{
+    MORNING,AFTERNOON,EVENING
+}
+data class Event5(
+    val title:String,
+    val description: String?=null,
+    val daypart:Daypart,
+    val durationInMinutes: Int
+){}
+fun main(){
+    val event1 = Event2(title = "Wake up", description = "Time to get up", daypart = Daypart.MORNING, durationInMinutes = 0)
+    val event2 = Event2(title = "Eat breakfast", daypart = Daypart.MORNING, durationInMinutes = 15)
+    val event3 = Event2(title = "Learn about Kotlin", daypart = Daypart.AFTERNOON, durationInMinutes = 30)
+    val event4 = Event2(title = "Practice Compose", daypart = Daypart.AFTERNOON, durationInMinutes = 60)
+    val event5 = Event2(title = "Watch latest DevBytes video", daypart = Daypart.AFTERNOON, durationInMinutes = 10)
+    val event6 = Event2(title = "Check out latest Android Jetpack library", daypart = Daypart.EVENING, durationInMinutes = 45)
+    val list= mutableListOf(event1,event2,event3,event4,event5,event6)
+    println("Last event of the day: ${list.last().title}")
+}
