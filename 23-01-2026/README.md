@@ -1,0 +1,802 @@
+# Comprehensive Study Guide: DataStore & Preferences DataStore
+## Storing Key-Value Pair Data in Android Apps
+
+---
+
+## TABLE OF CONTENTS
+1. Introduction & Overview
+2. Definitions & Core Concepts
+3. DataStore vs SharedPreferences Comparison
+4. Preferences DataStore vs Proto DataStore
+5. Implementation Guide (Step-by-Step)
+6. Reading Data Operations
+7. Writing Data Operations
+8. Error Handling
+9. Migration from SharedPreferences
+10. Best Practices
+11. FAQs
+12. Code Examples
+13. Revision Summary
+
+---
+
+## 1. INTRODUCTION & OVERVIEW
+
+### What is Jetpack DataStore?
+Jetpack DataStore is a modern data storage solution from Google's Android Jetpack library that replaces the deprecated SharedPreferences API. It provides a safe, consistent, and asynchronous way to store and access small amounts of data like user preferences and application settings.
+
+**Key Features:**
+- Fully asynchronous API using Kotlin Coroutines and Flow
+- Type-safe data access
+- Built-in data consistency and transaction support
+- Seamless data migration
+- Handles data corruption gracefully
+- Runs on IO dispatcher (prevents UI thread blocking)
+
+### Two Implementations of DataStore:
+1. **Preferences DataStore** - For key-value pairs (like SharedPreferences)
+2. **Proto DataStore** - For typed objects with Protocol Buffers
+
+---
+
+## 2. DEFINITIONS & CORE CONCEPTS
+
+### **2.1 What is Preferences DataStore?**
+Preferences DataStore is a lightweight key-value storage implementation that stores data asynchronously and transactionally without requiring a predefined schema. It uses an XML-based file format but provides a more efficient and safer API than SharedPreferences.
+
+**File Structure:** Data is stored in XML format at:
+`/data/data/your.package.name/files/datastore/settings.preferences_pb`
+
+### **2.2 Key Terminology**
+
+#### **Key**
+A named identifier used to store and retrieve values. Types include:
+- `intPreferencesKey(name: String)` - for storing Integer values
+- `stringPreferencesKey(name: String)` - for storing String values
+- `booleanPreferencesKey(name: String)` - for storing Boolean values
+- `floatPreferencesKey(name: String)` - for storing Float values
+- `doublePreferencesKey(name: String)` - for storing Double values
+- `longPreferencesKey(name: String)` - for storing Long values
+- `stringSetPreferencesKey(name: String)` - for storing Set<String>
+
+**Example:**
+```kotlin
+private val USER_NAME = stringPreferencesKey("user_name")
+private val USER_AGE = intPreferencesKey("user_age")
+private val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
+```
+
+#### **Flow**
+A Kotlin coroutine Flow that emits values whenever data in the DataStore changes. It enables reactive programming patterns.
+
+**Properties:**
+- Cold stream - doesn't emit until someone collects
+- Always emits current value when collection begins
+- Never blocks the calling thread
+
+#### **Edit Operation**
+A suspend function that allows you to modify DataStore data transactionally. All changes in the lambda are treated as a single atomic transaction.
+
+#### **Preferences Object**
+An immutable map-like object containing all current key-value pairs stored in DataStore.
+
+#### **MutablePreferences**
+A mutable version of Preferences that you modify inside the `edit()` lambda.
+
+### **2.3 ACID Properties**
+DataStore guarantees ACID compliance:
+- **Atomic** - All-or-nothing transactions
+- **Consistent** - Data remains in a valid state
+- **Isolated** - Concurrent operations don't interfere
+- **Durable** - Data persists after operations complete
+
+---
+
+## 3. DATASTORE VS SHAREDPREFERENCES COMPARISON
+
+| Feature | SharedPreferences | Preferences DataStore |
+|---------|------------------|----------------------|
+| **API Type** | Synchronous | Fully Asynchronous |
+| **Thread Safety** | Blocks UI thread | Uses IO dispatcher |
+| **Error Handling** | Runtime exceptions | IOException via Flow |
+| **Data Format** | XML files | XML with Protocol Buffers |
+| **Type Safety** | No (manual conversion) | Yes (type-safe keys) |
+| **Data Consistency** | No guarantees | Transactional ACID |
+| **Data Corruption** | Not handled | Corruption handler API |
+| **Reactive Updates** | Listener-based (complex) | Flow-based (native) |
+| **Performance** | Slower for large data | More efficient I/O |
+| **Coroutines Support** | No | Full support |
+| **Migration Support** | N/A | Built-in migration tools |
+| **Modern Apps** | Deprecated | Recommended |
+
+### **When to Use Each:**
+- **SharedPreferences**: Legacy apps, very simple use cases
+- **DataStore**: All new Android apps, modern architectures
+
+---
+
+## 4. PREFERENCES DATASTORE VS PROTO DATASTORE
+
+| Aspect | Preferences DataStore | Proto DataStore |
+|--------|----------------------|-----------------|
+| **Use Case** | Key-value pairs | Typed objects |
+| **Schema Required** | No | Yes (proto file) |
+| **Type Safety** | Partial (keys are typed) | Full (objects are typed) |
+| **Complexity** | Simple | Moderate |
+| **Serialization** | Built-in | Custom serializer |
+| **Best For** | Preferences, settings | Complex structured data |
+| **Performance** | Good | Better |
+| **Learning Curve** | Easy | Moderate |
+
+---
+
+## 5. IMPLEMENTATION GUIDE (STEP-BY-STEP)
+
+### **Step 1: Add Dependencies to build.gradle**
+
+**For Preferences DataStore:**
+```gradle
+dependencies {
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    
+    // Optional: RxJava support
+    implementation "androidx.datastore:datastore-preferences-rxjava3:1.0.0"
+}
+```
+
+**For Proto DataStore:**
+```gradle
+plugins {
+    id "com.google.protobuf" version "0.9.5"
+}
+
+dependencies {
+    implementation "androidx.datastore:datastore:1.0.0"
+    implementation "com.google.protobuf:protobuf-kotlin-lite:3.21.0"
+}
+```
+
+### **Step 2: Create a DataStore Instance**
+
+At the top level of your Kotlin file (typically in MainActivity.kt or a separate DataStore file):
+
+```kotlin
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+
+// Create singleton instance
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "user_preferences"  // Name of the file
+)
+```
+
+**Key Points:**
+- Call this once at the top level
+- Use as a singleton throughout your app
+- Creating multiple instances breaks functionality
+
+### **Step 3: Define Preferences Keys**
+
+Create a companion object or separate file to hold all keys:
+
+```kotlin
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+
+object PreferencesKeys {
+    val USER_NAME = stringPreferencesKey("user_name")
+    val USER_AGE = intPreferencesKey("user_age")
+    val IS_DARK_MODE = booleanPreferencesKey("is_dark_mode")
+    val USER_ID = longPreferencesKey("user_id")
+    val THEME_COLOR = stringPreferencesKey("theme_color")
+}
+```
+
+### **Step 4: Create a Repository Class**
+
+This follows clean architecture patterns:
+
+```kotlin
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class UserPreferencesRepository(
+    private val dataStore: DataStore<Preferences>
+) {
+    // Read operations return Flow for reactivity
+    
+    // Read String value
+    fun getUserNameFlow(): Flow<String> = dataStore.data
+        .map { preferences ->
+            preferences[PreferencesKeys.USER_NAME] ?: "Default User"
+        }
+    
+    // Read Int value
+    fun getUserAgeFlow(): Flow<Int> = dataStore.data
+        .map { preferences ->
+            preferences[PreferencesKeys.USER_AGE] ?: 0
+        }
+    
+    // Read Boolean value
+    fun isDarkModeEnabledFlow(): Flow<Boolean> = dataStore.data
+        .map { preferences ->
+            preferences[PreferencesKeys.IS_DARK_MODE] ?: false
+        }
+    
+    // Write operations are suspend functions
+    
+    // Save String value
+    suspend fun saveUserName(name: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USER_NAME] = name
+        }
+    }
+    
+    // Save Int value
+    suspend fun saveUserAge(age: Int) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USER_AGE] = age
+        }
+    }
+    
+    // Save Boolean value
+    suspend fun setDarkMode(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.IS_DARK_MODE] = enabled
+        }
+    }
+}
+```
+
+---
+
+## 6. READING DATA OPERATIONS
+
+### **6.1 Basic Read Pattern**
+
+Reading from DataStore returns a `Flow<T>` which is asynchronous:
+
+```kotlin
+// Simple read operation
+fun getUserNameFlow(): Flow<String> = dataStore.data
+    .map { preferences ->
+        preferences[USER_NAME_KEY] ?: "Guest"
+    }
+```
+
+### **6.2 Reading in Different Contexts**
+
+**In Activities/Fragments:**
+```kotlin
+class MainActivity : AppCompatActivity() {
+    private val userPreferences by lazy { 
+        UserPreferencesRepository(applicationContext.dataStore) 
+    }
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        lifecycleScope.launch {
+            userPreferences.getUserNameFlow().collect { userName ->
+                // Update UI with userName
+                textView.text = userName
+            }
+        }
+    }
+}
+```
+
+**In ViewModels (Recommended):**
+```kotlin
+class UserViewModel(
+    private val repository: UserPreferencesRepository
+) : ViewModel() {
+    
+    // Expose as StateFlow for UI observation
+    val userName: StateFlow<String> = repository.getUserNameFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = "Loading..."
+        )
+}
+```
+
+**In Jetpack Compose:**
+```kotlin
+@Composable
+fun UserScreen(viewModel: UserViewModel) {
+    val userName by viewModel.userName.collectAsState()
+    
+    Text(text = "Hello, $userName")
+}
+```
+
+### **6.3 Using first() for Single Read**
+
+Get only the first/current value without subscribing to changes:
+
+```kotlin
+// Suspending function to get single value
+suspend fun getCurrentUserName(): String = 
+    dataStore.data
+        .map { preferences -> preferences[USER_NAME_KEY] ?: "Guest" }
+        .first()  // Get first emission and cancel
+
+// In coroutine:
+lifecycleScope.launch {
+    val currentName = getCurrentUserName()
+    Log.d("DataStore", "Current name: $currentName")
+}
+```
+
+### **6.4 Chaining Multiple Reads**
+
+```kotlin
+// Read multiple values and combine
+fun getUserDataFlow(): Flow<UserData> = dataStore.data
+    .map { preferences ->
+        UserData(
+            name = preferences[PreferencesKeys.USER_NAME] ?: "Unknown",
+            age = preferences[PreferencesKeys.USER_AGE] ?: 0,
+            isDarkMode = preferences[PreferencesKeys.IS_DARK_MODE] ?: false
+        )
+    }
+
+data class UserData(val name: String, val age: Int, val isDarkMode: Boolean)
+```
+
+### **6.5 Filtering Data**
+
+```kotlin
+// Only emit when value changes
+fun getUserNameFlow(): Flow<String> = dataStore.data
+    .map { preferences -> preferences[PreferencesKeys.USER_NAME] ?: "Guest" }
+    .distinctUntilChanged()  // Only emit on change
+
+// Only emit values matching condition
+fun getUserNameIfAdult(): Flow<String> = dataStore.data
+    .map { preferences ->
+        val age = preferences[PreferencesKeys.USER_AGE] ?: 0
+        if (age >= 18) {
+            preferences[PreferencesKeys.USER_NAME] ?: "Guest"
+        } else {
+            "Unknown"
+        }
+    }
+```
+
+---
+
+## 7. WRITING DATA OPERATIONS
+
+### **7.1 Basic Write Pattern**
+
+Writing to DataStore uses the `edit()` suspend function:
+
+```kotlin
+suspend fun saveUserName(name: String) {
+    dataStore.edit { preferences ->
+        preferences[USER_NAME_KEY] = name
+    }
+}
+```
+
+### **7.2 Single Key Update**
+
+```kotlin
+suspend fun saveUserAge(age: Int) {
+    dataStore.edit { preferences ->
+        preferences[PreferencesKeys.USER_AGE] = age
+    }
+}
+
+suspend fun setDarkModeEnabled(enabled: Boolean) {
+    dataStore.edit { preferences ->
+        preferences[PreferencesKeys.IS_DARK_MODE] = enabled
+    }
+}
+```
+
+### **7.3 Multiple Keys in Single Transaction**
+
+All updates within one `edit()` block are atomic:
+
+```kotlin
+suspend fun saveUserProfile(
+    name: String,
+    age: Int,
+    darkMode: Boolean
+) {
+    // All three updates happen together (atomic transaction)
+    dataStore.edit { preferences ->
+        preferences[PreferencesKeys.USER_NAME] = name
+        preferences[PreferencesKeys.USER_AGE] = age
+        preferences[PreferencesKeys.IS_DARK_MODE] = darkMode
+    }
+}
+```
+
+### **7.4 Conditional Writes**
+
+```kotlin
+suspend fun updateUserAgeIfOlder(newAge: Int) {
+    dataStore.edit { preferences ->
+        val currentAge = preferences[PreferencesKeys.USER_AGE] ?: 0
+        if (newAge > currentAge) {
+            preferences[PreferencesKeys.USER_AGE] = newAge
+        }
+    }
+}
+```
+
+### **7.5 Reading and Writing in Same Transaction**
+
+```kotlin
+suspend fun incrementLoginCount() {
+    dataStore.edit { preferences ->
+        val currentCount = preferences[PreferencesKeys.LOGIN_COUNT] ?: 0
+        preferences[PreferencesKeys.LOGIN_COUNT] = currentCount + 1
+    }
+}
+
+// Or with calculated value based on other fields
+suspend fun updateTimestamp() {
+    dataStore.edit { preferences ->
+        val currentCount = preferences[PreferencesKeys.LOGIN_COUNT] ?: 0
+        if (currentCount > 10) {
+            preferences[PreferencesKeys.LAST_LOGIN] = System.currentTimeMillis()
+        }
+    }
+}
+```
+
+### **7.6 Write Operations in ViewModels**
+
+```kotlin
+class SettingsViewModel(
+    private val repository: UserPreferencesRepository
+) : ViewModel() {
+    
+    fun updateDarkMode(enabled: Boolean) {
+        viewModelScope.launch {
+            try {
+                repository.setDarkMode(enabled)
+                // Success
+            } catch (e: IOException) {
+                // Handle error
+                Log.e("Settings", "Failed to update dark mode", e)
+            }
+        }
+    }
+    
+    fun saveUserProfile(name: String, age: Int) {
+        viewModelScope.launch {
+            try {
+                repository.saveUserProfile(name, age)
+                // Show success message
+            } catch (e: Exception) {
+                // Show error message
+            }
+        }
+    }
+}
+```
+
+### **7.7 Delete Values**
+
+Remove a key from DataStore:
+
+```kotlin
+suspend fun clearUserName() {
+    dataStore.edit { preferences ->
+        preferences.remove(PreferencesKeys.USER_NAME)
+    }
+}
+
+suspend fun clearAllData() {
+    dataStore.edit { preferences ->
+        preferences.clear()  // Removes all entries
+    }
+}
+```
+
+---
+
+## 8. ERROR HANDLING
+
+### **8.1 Understanding DataStore Errors**
+
+DataStore handles errors differently from SharedPreferences:
+- **IOException**: Thrown when reading/writing to disk fails
+- **CorruptionException**: Thrown when file is corrupted (optional recovery)
+- **Other exceptions**: Re-throw to caller
+
+### **8.2 Handling IOException in Read Operations**
+
+Use the `catch` operator on Flow:
+
+```kotlin
+fun getUserNameFlow(): Flow<String> = dataStore.data
+    .catch { exception ->
+        if (exception is IOException) {
+            // Emit default value on error
+            emit(emptyPreferences())
+        } else {
+            // Re-throw other exceptions
+            throw exception
+        }
+    }
+    .map { preferences ->
+        preferences[PreferencesKeys.USER_NAME] ?: "Default User"
+    }
+```
+
+### **8.3 Handling Errors in Write Operations**
+
+Use try-catch for suspend functions:
+
+```kotlin
+suspend fun saveUserName(name: String) {
+    try {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USER_NAME] = name
+        }
+    } catch (ioException: IOException) {
+        Log.e("DataStore", "Failed to save user name", ioException)
+        // Notify UI about failure
+    }
+}
+```
+
+### **8.4 Comprehensive Error Handling Pattern**
+
+```kotlin
+fun getUserDataFlow(): Flow<Result<UserData>> = dataStore.data
+    .catch { exception ->
+        emit(Result.Error(exception))
+    }
+    .map { preferences ->
+        try {
+            val userData = UserData(
+                name = preferences[PreferencesKeys.USER_NAME] ?: "Unknown",
+                age = preferences[PreferencesKeys.USER_AGE] ?: 0
+            )
+            Result.Success(userData)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+sealed class Result<T> {
+    data class Success<T>(val data: T) : Result<T>()
+    data class Error<T>(val exception: Throwable) : Result<T>()
+}
+```
+
+### **8.5 Handling Data Corruption**
+
+```kotlin
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferencesSerializer
+
+// When creating DataStore with factory:
+val dataStore = DataStoreFactory.create(
+    serializer = PreferencesSerializer,
+    produceFile = { context.preferencesDataStoreFile("settings") },
+    corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() }
+)
+```
+
+---
+
+## 9. MIGRATION FROM SHAREDPREFERENCES
+
+### **9.1 Setting Up Migration**
+
+```kotlin
+private const val USER_PREFERENCES_NAME = "user_preferences"
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "new_datastore",
+    produceMigrations = { context ->
+        listOf(
+            SharedPreferencesMigration(
+                context = context,
+                sharedPreferencesName = USER_PREFERENCES_NAME
+            )
+        )
+    }
+)
+```
+
+### **9.2 Migration Process**
+
+1. **Create DataStore with migration configuration**
+2. **Define matching keys with same names**
+3. **DataStore automatically migrates data on first read**
+4. **Old SharedPreferences data is deleted after migration**
+
+### **9.3 Example Migration**
+
+**Before (SharedPreferences):**
+```kotlin
+val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+sharedPref.edit().putString("user_name", "John").apply()
+val name = sharedPref.getString("user_name", "Guest")
+```
+
+**After (DataStore):**
+```kotlin
+// Define key with same name as SharedPreferences key
+val USER_NAME_KEY = stringPreferencesKey("user_name")
+
+// Setup migration
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "user_datastore",
+    produceMigrations = { context ->
+        listOf(SharedPreferencesMigration(context, "user_prefs"))
+    }
+)
+
+// Use like before
+suspend fun saveName(name: String) {
+    dataStore.edit { it[USER_NAME_KEY] = name }
+}
+```
+
+---
+
+## 10. BEST PRACTICES
+
+### **10.1 DataStore Creation**
+- Create DataStore instance once at application level
+- Use as singleton throughout app
+- Never create multiple instances for same file
+- Store reference in Application class or use Hilt
+
+### **10.2 Key Management**
+- Define all keys in one object (PreferencesKeys)
+- Use consistent, descriptive key names
+- Never create keys dynamically inside functions
+- Use type-safe key creation functions
+
+### **10.3 Read Operations**
+- Return Flow<T> from repository methods
+- Collect in lifecycle-aware components
+- Use StateFlow in ViewModels for UI state
+- Apply distinctUntilChanged() to reduce emissions
+
+### **10.4 Write Operations**
+- Always use suspend functions
+- Group related updates in single edit() block
+- Handle IOException appropriately
+- Use viewModelScope for UI-related writes
+
+### **10.5 Error Handling**
+- Always catch IOException in read operations
+- Use try-catch for write operations
+- Provide meaningful default values
+- Log errors for debugging
+
+### **10.6 Architecture**
+- Implement Repository pattern
+- Use ViewModels to manage DataStore access
+- Inject DataStore dependencies with Hilt
+- Keep DataStore operations async
+
+### **10.7 Testing**
+```kotlin
+@Test
+fun testSaveUserName() {
+    // Use in-memory test DataStore
+    val testDataStore = DataStoreTestUtils.createTestDataStore()
+    val repository = UserPreferencesRepository(testDataStore)
+    
+    runTest {
+        repository.saveUserName("TestUser")
+        val name = repository.getUserNameFlow().first()
+        assertEquals("TestUser", name)
+    }
+}
+```
+
+---
+
+## 11. FREQUENTLY ASKED QUESTIONS (FAQs)
+
+### **Q1: Why should I use DataStore instead of SharedPreferences?**
+**A:** DataStore offers:
+- Asynchronous, non-blocking operations
+- Type-safe access
+- ACID transaction guarantees
+- Better error handling
+- Automatic data migration support
+- Built-in coroutine support
+
+Google officially recommends DataStore for new apps.
+
+### **Q2: Can I have multiple DataStore instances?**
+**A:** No. Having multiple instances for the same file breaks functionality and throws `IllegalStateException`. Always create one singleton instance.
+
+### **Q3: Is DataStore thread-safe?**
+**A:** Yes. DataStore is fully thread-safe. All operations are serialized, and concurrent writes are queued. You can safely access from any thread.
+
+### **Q4: How do I read a single value without subscribing to changes?**
+**A:** Use the `first()` terminal operator:
+```kotlin
+val userName = dataStore.data
+    .map { it[USER_NAME_KEY] }
+    .first()
+```
+
+### **Q5: Can DataStore work across multiple processes?**
+**A:** Yes, use `MultiProcessDataStoreFactory` for cross-process access with consistent behavior.
+
+### **Q6: What if my DataStore file gets corrupted?**
+**A:** You can set up a `CorruptionHandler` to recover gracefully:
+```kotlin
+corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() }
+```
+
+### **Q7: How do I delete a value from DataStore?**
+**A:** Use the `remove()` method in edit block:
+```kotlin
+dataStore.edit { preferences ->
+    preferences.remove(USER_NAME_KEY)
+}
+```
+
+### **Q8: Can I use DataStore with Jetpack Compose?**
+**A:** Yes. Use `Flow.collectAsState()` to convert Flow to State:
+```kotlin
+val userName by repository.getUserNameFlow()
+    .collectAsState(initial = "Loading...")
+```
+
+### **Q9: Does DataStore block the UI thread?**
+**A:** No. DataStore automatically performs all I/O on the IO dispatcher, preventing UI blocking.
+
+### **Q10: How do I migrate existing SharedPreferences data?**
+**A:** Set up `SharedPreferencesMigration` when creating DataStore:
+```kotlin
+produceMigrations = { context ->
+    listOf(SharedPreferencesMigration(context, "old_prefs_name"))
+}
+```
+
+### **Q11: What types of data can Preferences DataStore store?**
+**A:** 
+- String
+- Int
+- Long
+- Double
+- Float
+- Boolean
+- Set<String>
+
+For other types, use Proto DataStore.
+
+### **Q12: How do I use DataStore in an Activity without ViewModel?**
+**A:** You can, but it's not recommended:
+```kotlin
+class MyActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        lifecycleScope.launch {
+            dataStore.data.collect { preferences ->
+                // Update UI
+            }
+        }
+    }
+}
+```
+
+---

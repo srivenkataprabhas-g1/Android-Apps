@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Flight Search</string>
+    <string name="arrive">Arrive</string>
+    <string name="depart">Depart</string>
+    <string name="depart_code">%S</string>
+    <string name="depart_name">%S</string>
+    <string name="arrive_code">%S</string>
+    <string name="arrive_name">%S</string>
+    <string name="favorite">Favorite</string>
+    <string name="Enter">Enter departure airport</string>
+</resources>
