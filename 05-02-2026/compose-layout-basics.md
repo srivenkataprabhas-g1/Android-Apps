@@ -40,7 +40,7 @@ The layout system in Compose is designed with two main goals:
 2. **Easy custom layouts**
    - You can **easily write your own layout composable** when the built-in ones don't fit your design.
 
-> ⚠️ **Note**: Unlike the old Android View system (where deep nesting of `RelativeLayout`, etc., could hurt performance), Compose **handles nested layouts efficiently**, so you can nest as deeply as needed without worrying about layout-pass overhead.
+>  **Note**: Unlike the old Android View system (where deep nesting of `RelativeLayout`, etc., could hurt performance), Compose **handles nested layouts efficiently**, so you can nest as deeply as needed without worrying about layout-pass overhead.
 
 ---
 
@@ -250,7 +250,7 @@ fun ArtistCardModifiers(
 
 **Modifiers are chained** and applied **from left to right**.
 
-> 🔍 **Analogy**: Modifiers are similar to **layout parameters** in XML layouts, but they are **type-safe** and scoped to the composable they apply to, so the IDE helps you discover what is available.
+>  **Analogy**: Modifiers are similar to **layout parameters** in XML layouts, but they are **type-safe** and scoped to the composable they apply to, so the IDE helps you discover what is available.
 
 ---
 
@@ -484,8 +484,8 @@ A **LaunchedEffect** is a **Compose tool for running side effects safely**.
 | ------------------ | ------------------------- | ------------------------ |
 | What it is         | Any external action       | Compose API              |
 | Purpose            | Does something outside UI | Safely runs side effects |
-| Recomposition-safe | ❌ No                      | ✅ Yes                    |
-| Lifecycle-aware    | ❌ No                      | ✅ Yes                    |
+| Recomposition-safe | No                        |  Yes                     |
+| Lifecycle-aware    | No                        |  Yes                     |
 
 ---
 
